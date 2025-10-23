@@ -533,12 +533,11 @@ function renderSettingsTable(){
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td><input class="inp-name" value="${esc(act.name)}" /></td>
-      <td>
-  <input class="inp-cat" type="text" value="${esc(act.category)}" list="categoryList" />
+     <td>
+  <input class="inp-cat" type="text" value="${esc(act.category)}" />
 </td>
 
       <td><input class="inp-pt" type="number" min="1" step="1" value="${act.point}" /></td>
-      <td><input class="inp-note" value="${esc(act.note||"")}" /></td>
       <td style="text-align:center"><input class="inp-hard" type="checkbox" ${act.hard?"checked":""} /></td>
       <td class="row-actions">
         <button class="btn small ghost" data-op="save">保存</button>
@@ -745,5 +744,4 @@ checkDateChangeAndUpdateHistory();
 
 // ページが開いている間も定期的に監視（1分ごと）
 setInterval(checkDateChangeAndUpdateHistory, 60 * 1000);
-
 
