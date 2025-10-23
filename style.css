@@ -239,3 +239,21 @@ tr:last-child td{ border-bottom:none }
     font-size: 14px;
   }
 }
+
+/* スマホで既存の行動テーブルが潰れる問題を修正 */
+#actionsTableWrap table {
+  table-layout: auto !important;
+  width: 100%;
+}
+
+#actionsTableWrap input,
+#actionsTableWrap select {
+  min-width: 60px;
+  font-size: 14px;
+  padding: 6px 8px;
+}
+
+#actionsTableWrap td {
+  white-space: nowrap;
+  overflow: visible;
+}
