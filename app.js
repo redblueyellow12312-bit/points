@@ -441,12 +441,6 @@ function renderActionRow(act){
       <div class="counter" data-counter>${counts}</div>
       <button class="btn icon" data-op="plus">＋</button>
     </div>
-    <div class="action-ops">
-      <button class="btn ghost small" data-op="reset">リセット</button>
-    </div>
-    <div class="action-ops">
-      <div class="chip">合計 <span data-gained>${act.point*counts}</span> pt</div>
-    </div>
   `;
   row.addEventListener("click", e=>{
   const op = e.target.closest("[data-op]")?.dataset.op; if(!op) return;
