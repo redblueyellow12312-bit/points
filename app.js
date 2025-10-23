@@ -214,13 +214,15 @@ function subscribeCloud() {
   );
 
   // ✅ 相手の承認待ち（相手が申請した pending のみ表示）
-  unsubPartnerReq = onSnapshot(
-    query(
-      collection(db, "pairs", state.ui.pairCode, "requests"),
-      where("role", "==", partnerRole()),
-      where("approved", "==", false),
-      orderBy("createdAt", "desc")
-    ),
+ unsubPartnerReq = onSnapshot(
+  query(
+    collection(db, "pairs", state.ui.pairCode, "requests"),
+    where("role", "==", partnerRole()),
+    where("approved", "==", false),
+    where("cancelled", "==", false),
+    orderBy("createdAt", "desc")
+  ),
+
     qs => {
       const list = $("#partnerRequests");
       list.innerHTML = "";
