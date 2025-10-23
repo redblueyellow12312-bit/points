@@ -263,6 +263,11 @@ select.inp-cat {
   min-width: 80px;
 }
 
+/* メモ列を非表示にする */
+#actionsTableWrap table th:nth-child(4),
+#actionsTableWrap table td:nth-child(4) {
+  display: none;
+}
 /* スマホで行動名・カテゴリ・ポイントを広く見せる */
 #actionsTableWrap table {
   table-layout: auto !important;
@@ -305,4 +310,8 @@ select.inp-cat {
   #actionsTableWrap td:nth-child(1) input {
     min-width: 130px;
   }
+}
+/* === iOSズーム防止 === */
+input, select, textarea {
+  font-size: 16px !important;
 }
