@@ -169,3 +169,73 @@ tr:last-child td{ border-bottom:none }
   font-weight: 600;
   color: var(--sub);
 }
+
+.gained {
+  min-width: 32px;
+  text-align: right;
+  font-weight: 600;
+  font-size: 15px;
+  color: #333;
+}
+
+/* 行動行の調整：リセット削除に対応 */
+.action-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+
+.action-ops {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ボタンをスマートに（押しやすく見やすく） */
+.btn.icon {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+/* 合計ptを右端に寄せて視認性UP */
+.action-ops:last-child {
+  margin-left: auto;
+}
+
+/* スマホでも崩れない */
+@media (max-width: 768px) {
+  .action-row {
+    font-size: 14px;
+    gap: 4px;
+  }
+  .btn.icon {
+    width: 26px;
+    height: 26px;
+    font-size: 14px;
+  }
+  .counter {
+    min-width: 28px;
+    font-size: 14px;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .gained {
+    font-size: 14px;
+  }
+  .btn.icon {
+    width: 26px;
+    height: 26px;
+  }
+  .counter {
+    min-width: 26px;
+    font-size: 14px;
+  }
+}
