@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>夫婦ポイントトラッカー（Firebase版）</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-left">
+      <div id="todayStr" class="date"></div>
+      <div id="roleLabel" class="role-label"></div>
+    </div>
+    <div class="header-right">
+      <div class="stat chip">今日: <span id="todayPoints">0</span>pt</div>
+      <div class="stat chip">正式: <span id="approvedPoints">0</span>pt</div>
+      <div class="stat chip">仮: <span id="pendingPoints">0</span>pt</div>
+    </div>
+  </header>
+
+  <!-- 初回/切替用モーダル（夫/妻＋ペアコード） -->
+  <div id="roleModal" class="modal">
+    <div class="modal-card">
+      <h3>はじめに設定</h3>
+      <div class="grid two">
+        <div class="full">
+          <label>ペアコード（家族で共通のコード）</label>
+          <input id="pairCode" type="text" placeholder="例：our-family-001" />
+          <small class="hint">※ 夫婦で同じ文字列を入力してください（自由な文字でOK）</small>
+        </div>
+        <div class="full">
+          <label>役割</label>
+          <div class="role-row">
+            <label><input type="radio" name="role" value="husband" /> 夫</label>
+            <label><input type="radio" name="role" value="wife" /> 妻</label>
+          </div>
+        </div>
+        <div class="full">
+          <button id="saveRoleBtn" class="btn primary">保存して開始</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main id="views">
+    <!-- 行動記録（初期表示） -->
+    <section id="view-record" class="view active">
+      <div class="section">
+        <div class="section-header">
+          <h2>行動記録</h2>
+          <div class="btn-row">
+            <button id="resetTodayBtn" class="btn ghost small">今日をリセット</button>
+            <button id="saveTodayBtn" class="btn primary small">今日の記録を申請（仮pt）</button>
+          </div>
+        </div>
+        <div id="recordAccordion" class="accordion"></div>
+      </div>
+    </section>
+
+    <!-- 行動設定 -->
+    <section id="view-settings" class="view">
+      <div class="section">
+        <div class="section-header">
+          <h2>行動設定</h2>
+          <div class="btn-row">
+            <button id="exportBtn" class="btn ghost small">バックアップ(エクスポート)</button>
+            <label class="btn ghost small">
+              インポート(JSON)
+              <input id="importInput" type="file" accept="application/json" hidden />
+            </label>
+            <button id="switchAccountBtn" class="btn small">アカウント切替（夫/妻・ペアコード）</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>新しい行動を追加</h3>
+          <form id="addActionForm" class="grid two">
+            <div>
+              <label>行動名</label>
+              <input type="text" id="newActionName" placeholder="例：瞑想" required />
+            </div>
+           <div>
+  <label>カテゴリ</label>
+  <input list="categoryList" id="newActionCategory" type="text" placeholder="例：仕事、趣味など" required />
+  <datalist id="categoryList">
+    <option value="心身ケア">
+    <option value="生活">
+    <option value="自己研鑽">
+    <option value="チャレンジ">
+  </datalist>
+</div>
+            <div>
+              <label>ポイント/回</label>
+              <input type="number" id="newActionPoint" min="1" step="1" value="10" required />
+            </div>
+            <div>
+              <label>メモ(任意)</label>
+              <input type="text" id="newActionNote" placeholder="例：3分以上 など" />
+            </div>
+            <div class="full">
+              <label><input type="checkbox" id="newActionHard" /> 苦手（ハイライト）</label>
+            </div>
+            <div class="full">
+              <button type="submit" class="btn primary">追加</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <h3>既存の行動</h3>
+          <div id="actionsTableWrap" class="table-wrap"></div>
+        </div>
+
+        <div class="card">
+          <h3>連続ボーナス設定（ローカル）</h3>
+          <form id="bonusForm" class="grid two">
+            <div class="full">
+              <label><input type="checkbox" id="bonusEnabled" /> 連続ボーナスを有効にする</label>
+            </div>
+            <div>
+              <label>連続日数（例：7）</label>
+              <input type="number" id="bonusDays" min="2" step="1" value="7" />
+            </div>
+            <div>
+              <label>ボーナスpt（例：50）</label>
+              <input type="number" id="bonusAmount" min="1" step="1" value="50" />
+            </div>
+            <div class="full">
+              <label><input type="checkbox" id="bonusPerAction" checked /> 行動ごとに判定する</label>
+            </div>
+            <div class="full">
+              <button type="submit" class="btn primary small">保存</button>
+            </div>
+          </form>
+          <small>※ 承認はクラウド側で管理。自動ボーナスは後から拡張可能です。</small>
+        </div>
+
+        <div class="card">
+          <h3>メモ（目標・ご褒美など）</h3>
+          <textarea id="memoText" rows="5" placeholder="目標やご褒美、自分ルールを自由に書いてください。"></textarea>
+          <div style="margin-top:10px; text-align:right;">
+            <button id="saveMemoBtn" class="btn primary small">保存</button>
+          </div>
+          <small id="memoSavedMsg" style="display:none; color:var(--good);">✅ 保存しました</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- ポイント（相手の承認待ちを表示） -->
+    <section id="view-points" class="view">
+      <div class="section">
+        <div class="section-header">
+          <h2>ポイント</h2>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-box">
+            <div class="label">今日（ローカル）</div>
+            <div class="value"><span id="pointsTodayBig">0</span> pt</div>
+          </div>
+          <div class="stat-box">
+            <div class="label">正式ポイント（クラウド）</div>
+            <div class="value"><span id="pointsApprovedBig">0</span> pt</div>
+          </div>
+          <div class="stat-box">
+            <div class="label">仮ポイント（未承認合計）</div>
+            <div class="value"><span id="pointsPendingBig">0</span> pt</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>承認待ち（相手の申請一覧）</h3>
+          <div id="partnerRequests" class="list"></div>
+        </div>
+
+        <div class="card">
+          <h3>申請履歴（未承認）</h3>
+          <div id="myPendingList" class="list"></div>
+        </div>
+        <div class="card">
+  <h3>ポイントを使う</h3>
+  <div style="display:flex; gap:8px; align-items:center;">
+    <input type="number" id="spendAmount" min="1" placeholder="例: 100" style="flex:1; padding:8px;" />
+    <button id="spendBtn" class="btn danger small">消費</button>
+  </div>
+  <small style="color:var(--sub);">※ 入力したptが現在の所持ポイントから減算されます。</small>
+</div>
+
+      </div>
+    </section>
+
+    <!-- 履歴（カレンダー） -->
+    <section id="view-history" class="view">
+      <div class="section">
+        <div class="section-header">
+          <h2>履歴</h2>
+          <button id="clearHistoryBtn" class="btn danger ghost small">ローカル履歴を削除</button>
+        </div>
+
+        <div class="calendar-toolbar">
+          <button id="calPrev" class="btn ghost small">◀︎</button>
+          <div id="calTitle" class="cal-title"></div>
+          <button id="calNext" class="btn ghost small">▶︎</button>
+        </div>
+        <div class="calendar">
+          <div class="cal-grid" id="calWeekdays">
+            <div class="cal-weekday">日</div><div class="cal-weekday">月</div><div class="cal-weekday">火</div>
+            <div class="cal-weekday">水</div><div class="cal-weekday">木</div><div class="cal-weekday">金</div><div class="cal-weekday">土</div>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+        </div>
+        <div class="note" style="margin-top:6px;">※ 各マスに「その日の合計pt（ローカル）」を表示。タップで詳細</div>
+
+        <div id="dayDetail" class="card" style="display:none; margin-top:12px;">
+          <h3 id="dayDetailTitle" style="margin-top:0;"></h3>
+          <div class="lines" id="dayDetailLines"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="tabbar">
+    <button class="tab active" data-target="view-record">📝 記録</button>
+    <button class="tab" data-target="view-settings">⚙️ 設定</button>
+    <button class="tab" data-target="view-points">💯 ポイント</button>
+    <button class="tab" data-target="view-history">📅 履歴</button>
+  </nav>
+
+  <footer class="app-footer">
+    <small>© 2025 夫婦ポイントトラッカー</small>
+  </footer>
+
+  <!-- Firebase対応のアプリ本体 -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
