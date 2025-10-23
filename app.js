@@ -524,7 +524,7 @@ function renderSettingsTable(){
   const table = document.createElement("table");
   table.innerHTML = `
     <thead>
-      <tr><th>行動名</th><th>カテゴリ</th><th>ポイント/回</th><th>メモ</th><th>苦手</th><th>操作</th></tr>
+      <tr><th>行動名</th><th>カテゴリ</th><th>ポイント/回</th><th>苦手</th><th>操作</th></tr>
     </thead>
     <tbody></tbody>
   `;
@@ -745,4 +745,5 @@ checkDateChangeAndUpdateHistory();
 
 // ページが開いている間も定期的に監視（1分ごと）
 setInterval(checkDateChangeAndUpdateHistory, 60 * 1000);
+
 
