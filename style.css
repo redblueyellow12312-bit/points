@@ -257,3 +257,52 @@ tr:last-child td{ border-bottom:none }
   white-space: nowrap;
   overflow: visible;
 }
+
+select.inp-cat {
+  padding-right: 24px; /* ← Safariの▼重なり対策 */
+  min-width: 80px;
+}
+
+/* スマホで行動名・カテゴリ・ポイントを広く見せる */
+#actionsTableWrap table {
+  table-layout: auto !important;
+  width: 100%;
+}
+
+#actionsTableWrap td,
+#actionsTableWrap th {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 各カラムの優先度を最適化 */
+#actionsTableWrap td:nth-child(1) input { /* 行動名 */
+  min-width: 140px;
+}
+#actionsTableWrap td:nth-child(2) select { /* カテゴリ */
+  min-width: 90px;
+}
+#actionsTableWrap td:nth-child(3) input { /* ポイント */
+  width: 60px;
+  text-align: center;
+}
+#actionsTableWrap td:nth-child(5) { /* 苦手チェック */
+  text-align: center;
+  width: 40px;
+}
+#actionsTableWrap td:nth-child(6) { /* 操作ボタン */
+  width: 90px;
+}
+
+/* スマホ専用（小さくても文字が切れない） */
+@media (max-width: 768px) {
+  #actionsTableWrap input,
+  #actionsTableWrap select {
+    font-size: 14px;
+    padding: 6px 8px;
+  }
+  #actionsTableWrap td:nth-child(1) input {
+    min-width: 130px;
+  }
+}
