@@ -56,6 +56,7 @@ body {
 .acc-item {
   border: 1px solid var(--border);
   border-radius: 12px;
+  overflow: hidden;
   background: var(--card);
   box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
@@ -79,55 +80,66 @@ body {
   border-radius: 10px;
   background: var(--surface);
 }
-.action-name { font-weight:600; }
+.action-row + .action-row { margin-top: 6px; }
+.action-name { font-weight: 600; }
 .action-pt { opacity:.8; font-size:12px; }
-.action-ops { display:flex; align-items:center; gap:6px; }
+.action-ops { display: flex; align-items: center; gap: 6px; }
 
 .counter {
-  min-width:40px; text-align:center;
-  padding:6px 8px; border:1px solid var(--border);
-  border-radius:8px; background: var(--muted);
+  min-width: 40px;
+  text-align: center;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--muted);
 }
 
 .btn {
-  border:none; border-radius:10px;
-  padding:10px 14px; font-weight:700;
-  cursor:pointer; transition: background .15s ease;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--muted);
+  color: var(--text);
+  transition: background .15s ease;
 }
-.btn.small { padding:6px 10px; font-size:13px; }
-.btn.primary { background: var(--primary); color:#fff; }
-.btn.ghost { background:transparent; border:1px solid var(--border); }
-.btn.danger { background: var(--danger); color:#fff; }
+.btn.small { padding: 6px 10px; font-size: 13px; }
+.btn.primary { background: var(--primary); color: #fff; }
+.btn.primary:hover { opacity: .9; }
+.btn.ghost { background: transparent; border: 1px solid var(--border); }
+.btn.danger { color: #fff; background: var(--danger); }
 .btn.icon {
-  width:30px; height:30px;
-  padding:0; font-size:16px;
-  font-weight:bold; line-height:1;
+  width: 30px; height: 30px;
+  display: grid; place-items: center;
+  font-size: 16px; font-weight: bold; line-height: 1;
 }
-.action-row.done { background:#eafff5; border-color:#b2e8c8; }
+.action-row.done { background: #eafff5; border-color: #b2e8c8; }
 .action-row.hard .action-name::after {
-  content:" 苦手"; color:#ffcc66; font-size:12px; margin-left:6px;
+  content: " 苦手"; color: #ffcc66; font-size: 12px; margin-left: 6px;
 }
 
-/* ===== 共通UI ===== */
+/* ===== カード／入力 ===== */
 .card {
   background: var(--card);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
   box-shadow: 0 1px 6px rgba(0,0,0,.04);
   overflow: visible;
 }
-.grid.two { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-.grid.two .full { grid-column:1 / -1; }
+.grid.two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid.two .full { grid-column: 1 / -1; }
+
 input, select, textarea {
-  width:100%;
-  padding:10px 12px;
-  border-radius:10px;
-  border:1px solid var(--border);
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);
   font-family: inherit;
-  font-size:16px; /* ← iOSズーム防止 */
+  font-size: 16px !important; /* iOSズーム防止 */
 }
 
 /* ===== テーブル（設定画面） ===== */
@@ -136,6 +148,7 @@ input, select, textarea {
   overflow-x: auto !important;
   -webkit-overflow-scrolling: touch;
 }
+
 #actionsTableWrap table {
   min-width: 640px;
   width: auto !important;
@@ -143,6 +156,7 @@ input, select, textarea {
   border-collapse: collapse;
   font-size: 14px;
 }
+
 #actionsTableWrap th, #actionsTableWrap td {
   padding: 10px;
   border-bottom: 1px solid var(--border);
@@ -150,26 +164,21 @@ input, select, textarea {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-#actionsTableWrap th { text-align:left; color: var(--sub); }
-#actionsTableWrap tr:last-child td { border-bottom:none; }
+#actionsTableWrap th { text-align: left; color: var(--sub); }
+#actionsTableWrap tr:last-child td { border-bottom: none; }
 
-/* カラム幅（メモ削除後の5列構成） */
-#actionsTableWrap td:nth-child(1) input { min-width: 150px; } /* 行動名 */
-#actionsTableWrap td:nth-child(2) input { min-width: 120px; } /* カテゴリ */
-#actionsTableWrap td:nth-child(3) input { width: 60px; text-align: center; } /* pt */
-#actionsTableWrap td:nth-child(4) { text-align: center; width: 50px; } /* 苦手 */
-#actionsTableWrap td:nth-child(5) { text-align: center; width: 120px; } /* 操作 */
-
-/* スマホ対応 */
-@media (max-width: 768px) {
-  #actionsTableWrap input {
-    font-size: 15px;
-    padding: 6px 8px;
-  }
-  #actionsTableWrap td:nth-child(1) input { min-width: 130px; }
-  #actionsTableWrap td:nth-child(2) input { min-width: 100px; }
-  #actionsTableWrap table { min-width: 600px; }
+/* メモ列を非表示 */
+#actionsTableWrap table th:nth-child(4),
+#actionsTableWrap table td:nth-child(4) {
+  display: none;
 }
+
+/* カラム幅最適化 */
+#actionsTableWrap td:nth-child(1) input { min-width: 150px; } /* 行動名 */
+#actionsTableWrap td:nth-child(2) select { min-width: 120px; } /* カテゴリ */
+#actionsTableWrap td:nth-child(3) input { width: 60px; text-align: center; } /* ポイント */
+#actionsTableWrap td:nth-child(4) { text-align: center; width: 40px; } /* 苦手 */
+#actionsTableWrap td:nth-child(5) { text-align: center; width: 120px; } /* 操作 */
 
 /* ===== タブバー ===== */
 .tabbar {
@@ -198,22 +207,72 @@ input, select, textarea {
 }
 .tab:active { transform: scale(0.97); }
 
-/* ===== その他 ===== */
+/* ===== フッター・補助 ===== */
 .app-footer { padding:12px; text-align:center; color:var(--sub); font-size:12px; }
 .role-label { margin-left:10px; font-weight:600; color: var(--sub); }
 .gained { min-width:32px; text-align:right; font-weight:600; font-size:15px; color:#333; }
 
-/* ===== レスポンシブ ===== */
-@media (max-width: 900px){ .stats-row { grid-template-columns: 1fr; } }
-@media (max-width: 720px){
-  .grid.two { grid-template-columns:1fr; }
-  .header-right { gap:6px; }
-  .action-row { font-size:14px; gap:4px; }
-  .btn.icon { width:26px; height:26px; font-size:14px; }
-  .counter { min-width:26px; font-size:14px; }
-  .gained { font-size:14px; }
-}
+/* ===== カレンダー ===== */
+.calendar-toolbar{ display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:8px; }
+.cal-title{ font-weight:800; letter-spacing:.5px; }
+.calendar{ background: var(--card); border:1px solid var(--border); border-radius:14px; padding:10px; }
+.cal-grid{ display:grid; grid-template-columns: repeat(7,1fr); gap:6px; }
+.cal-weekday{ text-align:center; font-size:12px; color:var(--sub); padding:4px 0; }
+.cal-cell{ border:1px solid var(--border); border-radius:10px; min-height:64px; padding:6px; display:flex; flex-direction:column; justify-content:space-between; background: var(--surface); cursor:pointer; }
+.cal-cell.dim{ opacity:.5; }
+.cal-cell .d{ font-weight:700; font-size:13px; }
+.cal-cell .pt{ font-size:12px; text-align:right; }
+.cal-cell.haspt{ outline:2px solid var(--primary-weak); }
+.cal-cell:hover{ box-shadow:0 0 0 2px var(--primary-weak) inset; }
 
-.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); align-items: center; justify-content: center; padding: 16px; z-index: 20; }
+/* ===== モーダル ===== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 20;
+}
 .modal.show { display: flex; }
-.modal-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 16px; max-width: 520px; width: 100%; }
+.modal-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  max-width: 520px;
+  width: 100%;
+}
+.role-row { display: flex; gap: 16px; }
+
+/* ===== レスポンシブ統合 ===== */
+@media (max-width: 900px) {
+  .stats-row { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  .grid.two { grid-template-columns: 1fr; }
+  .header-right { gap: 6px; }
+}
+@media (max-width: 768px) {
+  .action-row { font-size: 14px; gap: 4px; }
+  .btn.icon { width: 26px; height: 26px; font-size: 14px; }
+  .counter { min-width: 26px; font-size: 14px; }
+  .gained { font-size: 14px; }
+
+  #actionsTableWrap input,
+  #actionsTableWrap select {
+    font-size: 15px;
+    padding: 6px 8px;
+  }
+  #actionsTableWrap td:nth-child(1) input {
+    min-width: 130px;
+  }
+  #actionsTableWrap td:nth-child(2) select {
+    min-width: 100px;
+  }
+  #actionsTableWrap table {
+    min-width: 600px;
+  }
+}
