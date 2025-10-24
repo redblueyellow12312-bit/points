@@ -276,3 +276,46 @@ input, select, textarea {
     min-width: 600px;
   }
 }
+
+/* === 修正: プラス・マイナスボタンの位置ずれ修正 === */
+.action-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* ← 垂直中央に戻す */
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+
+/* .action-opsの自動右寄せを解除 */
+.action-ops {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 0 !important; /* ← autoを無効化して中央整列 */
+}
+
+/* ボタンとカウンターの垂直整列を改善 */
+.counter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 40px;
+  height: 30px; /* ← 高さを固定して揃える */
+  padding: 0 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--muted);
+}
+
+/* ボタンの中央寄せ */
+.btn.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1;
+}
