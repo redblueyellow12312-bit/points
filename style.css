@@ -213,3 +213,7 @@ input, select, textarea {
   .counter { min-width:26px; font-size:14px; }
   .gained { font-size:14px; }
 }
+
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); align-items: center; justify-content: center; padding: 16px; z-index: 20; }
+.modal.show { display: flex; }
+.modal-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 16px; max-width: 520px; width: 100%; }
